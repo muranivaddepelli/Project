@@ -323,9 +323,10 @@ const Signup = () => {
                 className="absolute right-3 top-[38px] text-slate-400 hover:text-slate-600 transition-colors"
               >
                 {showConfirmPassword ? (
-                  <HiOutlineEyeSlash className="w-5 h-5" />
-                ) : (
                   <HiOutlineEye className="w-5 h-5" />
+                ) : (
+                  <HiOutlineEyeSlash className="w-5 h-5" />
+
                 )}
               </button>
             </div>
