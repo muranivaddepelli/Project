@@ -494,8 +494,8 @@ const Dashboard = () => {
                   <th className="w-36">Functionality</th>
                   <th className="min-w-[250px]">Description</th>
                   <th className="w-32 text-center">Status</th>
-                  <th className="w-48">Staff Name</th>
-                  <th className="w-48">Timestamp (IST)</th>
+                  <th className="min-w-[150px]">Staff Name</th>
+                  <th className="min-w-[120px]">Timestamp (IST)</th>
                 </tr>
               </thead>
               <tbody>
@@ -543,7 +543,7 @@ const Dashboard = () => {
                           onChange={(e) => handleStaffNameChange(item.task._id, e.target.value)}
                           placeholder={isCurrentDate ? "Enter name" : "-"}
                           disabled={!isCurrentDate}
-                          className={`w-full px-3 py-2 text-sm rounded-lg border transition-all duration-200
+                          className={`w-full text-center px-3 py-2 text-sm rounded-lg border transition-all duration-200
                             ${!isCurrentDate 
                               ? 'bg-slate-50 border-slate-100 text-slate-500 cursor-not-allowed' 
                               : validationErrors[item.task._id]
