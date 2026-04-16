@@ -12,8 +12,7 @@ import {
   HiOutlineDocumentText,
   HiOutlineCheckCircle,
   HiOutlineExclamationCircle,
-  HiOutlineLockClosed,
-  HiOutlineBuildingOffice2
+  HiOutlineLockClosed
 } from 'react-icons/hi2';
 import { useAuth } from '../context/AuthContext';
 import { useChecklist, useSaveChecklist, useExportChecklist, useChecklistStatistics } from '../hooks/useChecklist';
@@ -441,8 +440,8 @@ const Dashboard = () => {
               max={format(new Date(), 'yyyy-MM-dd')} // Can't select future dates
             />
             
-            <div className="flex items-center gap-2">
-              <HiOutlineFunnel className="w-5 h-5 text-slate-400 hidden sm:block" />
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full">
+              <HiOutlineFunnel className="w-5 h-5 text-slate-400 hidden sm:block flex-shrink-0" />
               {isAdmin && (
                 <Select
                   value={selectedHospital}
@@ -452,8 +451,7 @@ const Dashboard = () => {
                   }}
                   options={hospitalOptions}
                   placeholder="All Hospitals"
-                  className="min-w-[160px]"
-                  icon={HiOutlineBuildingOffice2}
+                  className="w-full sm:w-auto sm:min-w-[160px]"
                 />
               )}
               <Select
@@ -461,7 +459,7 @@ const Dashboard = () => {
                 onChange={(e) => setSelectedArea(e.target.value)}
                 options={areaOptions}
                 placeholder="All Areas"
-                className="min-w-[150px]"
+                className="w-full sm:w-auto sm:min-w-[150px]"
               />
             </div>
           </div>
