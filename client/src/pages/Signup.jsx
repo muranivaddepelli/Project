@@ -109,7 +109,19 @@ const Signup = () => {
       toast.success('Account created successfully! Please sign in.');
       navigate('/login');
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';
+      const data = error.response?.data;
+      const fromErrors = Array.isArray(data?.errors) ? data.errors.filter(Boolean).join(' ') : '';
+      let errorMessage =
+        (typeof data?.message === 'string' && data.message) ||
+        fromErrors ||
+        (typeof error.message === 'string' && error.message) ||
+        'Registration failed. Please try again.';
+      if (!error.response) {
+        errorMessage = 'Cannot reach server. Is the API running on port 5000?';
+      }
+      if (typeof errorMessage !== 'string') {
+        errorMessage = 'Registration failed. Please try again.';
+      }
       toast.error(errorMessage);
     } finally {
       setIsLoading(false);
