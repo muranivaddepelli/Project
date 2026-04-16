@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { format, isToday, parseISO } from 'date-fns';
 import './Dahboard.css';
 import { 
@@ -64,6 +65,21 @@ const getStatusColor = (status) => {
   }
 };
 
+/** Used after save: only clear local overlay if the user did not edit again while the request was in flight. */
+const localChangesMatchSnapshot = (snapshot, current) => {
+  const snapKeys = Object.keys(snapshot);
+  const currKeys = Object.keys(current);
+  if (snapKeys.length !== currKeys.length) return false;
+  for (const k of snapKeys) {
+    const s = snapshot[k];
+    const c = current[k];
+    if (!c) return false;
+    if (!!s.status !== !!c.status) return false;
+    if ((s.staffName || '').trim() !== (c.staffName || '').trim()) return false;
+  }
+  return true;
+};
+
 const Dashboard = () => {
   const { isAdmin, user } = useAuth();
   const [selectedDate, setSelectedDate] = useState(format(new Date(), 'yyyy-MM-dd'));
@@ -110,10 +126,11 @@ const Dashboard = () => {
     }
   }, [isAdmin, userHospitalId, selectedHospital]);
 
+  const queryClient = useQueryClient();
   const { data: checklist, isLoading: checklistLoading, error: checklistError } = useChecklist(selectedDate, selectedArea || null, effectiveHospitalId);
   const { data: statistics } = useChecklistStatistics(selectedDate, effectiveHospitalId);
   const { data: areas, isLoading: areasLoading } = useActiveAreas(effectiveHospitalId);
-  const { mutate: saveChecklist, isPending: isSaving } = useSaveChecklist();
+  const { mutateAsync: saveChecklistAsync, isPending: isSaving } = useSaveChecklist();
   const { exportCSV } = useExportChecklist();
   
   // Staff Records - fetch all records (everyone can see all)
@@ -153,8 +170,13 @@ const Dashboard = () => {
   }, [checklist, localChanges]);
 
   // Auto-save function with debounce
-  const performAutoSave = useCallback(() => {
+  const performAutoSave = useCallback(async () => {
     if (!isCurrentDate || Object.keys(localChanges).length === 0) return;
+
+    const localSnapshot = {};
+    for (const [k, v] of Object.entries(localChanges)) {
+      localSnapshot[k] = { status: v.status, staffName: v.staffName ?? '' };
+    }
 
     // Validate: staff name required when status is Yes
     const errors = {};
@@ -181,21 +203,19 @@ const Dashboard = () => {
       staffName: item.entry.staffName
     }));
 
-    saveChecklist(
-      { date: selectedDate, entries },
-      {
-        onSuccess: () => {
-          setLocalChanges({});
-          setSaveStatus('saved');
-          // Reset to idle after 3 seconds
-          setTimeout(() => setSaveStatus('idle'), 3000);
-        },
-        onError: () => {
-          setSaveStatus('error');
-        }
-      }
-    );
-  }, [isCurrentDate, localChanges, mergedChecklist, selectedDate, saveChecklist]);
+    try {
+      await saveChecklistAsync({ date: selectedDate, entries });
+      await queryClient.invalidateQueries({ queryKey: ['checklist'] });
+      await queryClient.invalidateQueries({ queryKey: ['checklist-stats'] });
+      setLocalChanges(prev =>
+        localChangesMatchSnapshot(localSnapshot, prev) ? {} : prev
+      );
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 3000);
+    } catch {
+      setSaveStatus('error');
+    }
+  }, [isCurrentDate, localChanges, mergedChecklist, selectedDate, saveChecklistAsync, queryClient]);
 
   // Trigger auto-save when changes occur (debounced)
   useEffect(() => {
@@ -209,7 +229,7 @@ const Dashboard = () => {
     // Set new timer for 1.5 seconds
     autoSaveTimerRef.current = setTimeout(() => {
       performAutoSave();
-    }, 1500);
+    }, 1000);
 
     return () => {
       if (autoSaveTimerRef.current) {

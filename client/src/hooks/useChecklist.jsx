@@ -46,13 +46,9 @@ export const useUpdateEntry = () => {
 };
 
 export const useSaveChecklist = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: ({ date, entries }) => checklistService.saveChecklist(date, entries),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['checklist'] });
-      queryClient.invalidateQueries({ queryKey: ['checklist-stats'] });
       toast.success('Checklist saved successfully!');
     },
     onError: (error) => {
