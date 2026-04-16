@@ -206,10 +206,6 @@ const Dashboard = () => {
     try {
       await saveChecklistAsync({ date: selectedDate, entries });
 
-      // Patch the react-query cache with the just-saved values BEFORE clearing
-      // the local overlay. Without this the overlay is cleared while `checklist`
-      // still holds the pre-save server data for one render, which makes the
-      // toggle visually bounce back to the old value before the refetch lands.
       queryClient.setQueryData(
         ['checklist', selectedDate, selectedArea || null, effectiveHospitalId],
         (old) => {
@@ -238,8 +234,6 @@ const Dashboard = () => {
         }
       );
 
-      // Only clear the overlay if the user didn't edit the same fields again
-      // while the save was in flight.
       setLocalChanges((prev) =>
         localChangesMatchSnapshot(localSnapshot, prev) ? {} : prev
       );
@@ -247,11 +241,8 @@ const Dashboard = () => {
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus('idle'), 3000);
 
-      // Stats can refresh immediately ? they don't drive the toggle UI.
       queryClient.invalidateQueries({ queryKey: ['checklist-stats'] });
 
-      // Defer the checklist refetch so a slow DB read can't overwrite the
-      // optimistic value and cause another flicker.
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ['checklist'] });
       }, 1500);
@@ -644,7 +635,7 @@ const Dashboard = () => {
             </span>
           </div>
           <p className="text-sm text-slate-500 mt-1">
-            All records visible to everyone â?¢ {isAdmin ? 'Admin can edit all' : 'You can only edit your own records'}
+            All records visible to everyone - {isAdmin ? 'Admin can edit all' : 'You can only edit your own records'}
           </p>
         </div>
 
