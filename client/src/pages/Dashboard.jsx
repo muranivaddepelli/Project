@@ -492,7 +492,7 @@ const Dashboard = () => {
                 {saveStatus === 'saved' && (
                   <>
                     <HiOutlineCheckCircle className="w-4 h-4" />
-                    Saved â??
+                    Saved
                   </>
                 )}
                 {saveStatus === 'error' && (
