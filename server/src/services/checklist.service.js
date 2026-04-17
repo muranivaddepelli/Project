@@ -147,7 +147,7 @@ class ChecklistService {
 
       // Table header
       const tableTop = doc.y;
-      const colWidths = [110, 55, 80, 90, 150, 45, 90, 100];
+      const colWidths = [175, 50, 70, 85, 140, 40, 75, 85];
       const headers = ['Hospital', 'Task ID', 'Area', 'Task Name', 'Description', 'Status', 'Staff Name', 'Timestamp'];
       
       doc.font('Helvetica-Bold').fontSize(9);
@@ -172,13 +172,13 @@ class ChecklistService {
 
         xPos = 30;
         const values = [
-          row.hospital?.substring(0, 20),
+          row.hospital || '',
           row.taskId,
           row.area.substring(0, 12),
           row.taskName.substring(0, 14),
           row.description.substring(0, 28),
           row.status,
-          row.staffName.substring(0, 14),
+          row.staffName.substring(0, 12),
           row.timestamp
         ];
 
@@ -528,7 +528,7 @@ class ChecklistService {
 
       // Table header
       const tableTop = doc.y;
-      const colWidths = [55, 90, 55, 65, 75, 125, 40, 65, 150];
+      const colWidths = [55, 165, 45, 60, 70, 110, 38, 60, 117];
       const headers = ['Date', 'Hospital', 'Task ID', 'Area', 'Task Name', 'Description', 'Status', 'Staff', 'Completed At'];
       
       doc.font('Helvetica-Bold').fontSize(8);
@@ -553,11 +553,11 @@ class ChecklistService {
         xPos = 30;
         const values = [
           row.date.substring(0, 10),
-          row.hospital?.substring(0, 16),
+          row.hospital || '',
           row.taskId,
           row.area.substring(0, 10),
           row.taskName.substring(0, 12),
-          row.description.substring(0, 25),
+          row.description.substring(0, 22),
           row.status,
           row.staffName.substring(0, 10),
           row.completedAt || ''

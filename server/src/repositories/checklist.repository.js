@@ -1,4 +1,5 @@
 const { ChecklistEntry, Task } = require('../models');
+const { formatHospitalLabel } = require('../utils/formatHospitalLabel');
 
 class ChecklistRepository {
   async create(entryData) {
@@ -247,7 +248,7 @@ class ChecklistRepository {
       const entry = entryMap.get(task._id.toString());
       return {
         taskId: task.taskId,
-        hospital: task.area?.hospital?.name || '',
+        hospital: formatHospitalLabel(task.area?.hospital),
         area: task.area?.name || '',
         taskName: task.name,
         description: task.description,
@@ -321,7 +322,7 @@ class ChecklistRepository {
       date: entry.date ? new Date(entry.date).toISOString().split('T')[0] : '',
       taskId: entry.task?.taskId || '',
       area: entry.task?.area?.name || '',
-      hospital: entry.task?.area?.hospital?.name || '',
+      hospital: formatHospitalLabel(entry.task?.area?.hospital),
       taskName: entry.task?.name || '',
       description: entry.task?.description || '',
       status: entry.status ? 'Yes' : 'No',
