@@ -79,14 +79,8 @@ class ChecklistService {
       { label: 'Timestamp', value: 'timestamp' }
     ];
 
-    // Add hospital name to each row
-    const dataWithHospital = data.map(row => ({
-      ...row,
-      hospital: branding.name
-    }));
-
     const parser = new Parser({ fields });
-    const csv = parser.parse(dataWithHospital);
+    const csv = parser.parse(data);
 
     const safeHospitalCode = branding.code.replace(/[^a-zA-Z0-9]/g, '_');
     
@@ -153,8 +147,8 @@ class ChecklistService {
 
       // Table header
       const tableTop = doc.y;
-      const colWidths = [60, 100, 100, 200, 50, 100, 120];
-      const headers = ['Task ID', 'Area', 'Task Name', 'Description', 'Status', 'Staff Name', 'Timestamp'];
+      const colWidths = [110, 55, 80, 90, 150, 45, 90, 100];
+      const headers = ['Hospital', 'Task ID', 'Area', 'Task Name', 'Description', 'Status', 'Staff Name', 'Timestamp'];
       
       doc.font('Helvetica-Bold').fontSize(9);
       let xPos = 30;
@@ -178,12 +172,13 @@ class ChecklistService {
 
         xPos = 30;
         const values = [
+          row.hospital?.substring(0, 20),
           row.taskId,
-          row.area.substring(0, 15),
-          row.taskName.substring(0, 15),
-          row.description.substring(0, 35),
+          row.area.substring(0, 12),
+          row.taskName.substring(0, 14),
+          row.description.substring(0, 28),
           row.status,
-          row.staffName.substring(0, 15),
+          row.staffName.substring(0, 14),
           row.timestamp
         ];
 
@@ -199,7 +194,7 @@ class ChecklistService {
       doc.fontSize(8).text(
         `${branding.name} | Generated on ${new Date().toLocaleString()}`,
         30, 550,
-        { align: 'center', width: 730 }
+        { align: 'center', width: 720 }
       );
 
       doc.end();
@@ -292,6 +287,10 @@ class ChecklistService {
         tableHeader: true,
         children: [
           new TableCell({
+            children: [new Paragraph({ children: [new TextRun({ text: 'Hospital', bold: true })] })],
+            width: { size: 2200, type: WidthType.DXA },
+          }),
+          new TableCell({
             children: [new Paragraph({ children: [new TextRun({ text: 'Task ID', bold: true })] })],
             width: { size: 1000, type: WidthType.DXA },
           }),
@@ -324,6 +323,7 @@ class ChecklistService {
       // Data rows
       ...data.map(row => new TableRow({
         children: [
+          new TableCell({ children: [new Paragraph(row.hospital || '')] }),
           new TableCell({ children: [new Paragraph(row.taskId || '')] }),
           new TableCell({ children: [new Paragraph(row.area || '')] }),
           new TableCell({ children: [new Paragraph(row.taskName || '')] }),
@@ -461,13 +461,8 @@ class ChecklistService {
       { label: 'Completed At', value: 'completedAt' }
     ];
 
-    const dataWithHospital = data.map(row => ({
-      ...row,
-      hospital: branding.name
-    }));
-
     const parser = new Parser({ fields });
-    const csv = parser.parse(dataWithHospital);
+    const csv = parser.parse(data);
 
     const safeHospitalCode = branding.code.replace(/[^a-zA-Z0-9]/g, '_');
     
@@ -533,8 +528,8 @@ class ChecklistService {
 
       // Table header
       const tableTop = doc.y;
-      const colWidths = [60, 70, 80, 100, 150, 50, 80, 100];
-      const headers = ['Date', 'Task ID', 'Area', 'Task Name', 'Description', 'Status', 'Staff', 'Completed At'];
+      const colWidths = [55, 90, 55, 65, 75, 125, 40, 65, 150];
+      const headers = ['Date', 'Hospital', 'Task ID', 'Area', 'Task Name', 'Description', 'Status', 'Staff', 'Completed At'];
       
       doc.font('Helvetica-Bold').fontSize(8);
       let xPos = 30;
@@ -558,12 +553,13 @@ class ChecklistService {
         xPos = 30;
         const values = [
           row.date.substring(0, 10),
+          row.hospital?.substring(0, 16),
           row.taskId,
-          row.area.substring(0, 12),
-          row.taskName.substring(0, 15),
+          row.area.substring(0, 10),
+          row.taskName.substring(0, 12),
           row.description.substring(0, 25),
           row.status,
-          row.staffName.substring(0, 12),
+          row.staffName.substring(0, 10),
           row.completedAt || ''
         ];
 
@@ -578,7 +574,7 @@ class ChecklistService {
       doc.fontSize(8).text(
         `${branding.name} | Generated on ${new Date().toLocaleString()} | Total entries: ${data.length}`,
         30, 550,
-        { align: 'center', width: 730 }
+        { align: 'center', width: 720 }
       );
 
       doc.end();
@@ -608,6 +604,7 @@ class ChecklistService {
         tableHeader: true,
         children: [
           new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: 'Date', bold: true })] })] }),
+          new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: 'Hospital', bold: true })] })] }),
           new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: 'Task ID', bold: true })] })] }),
           new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: 'Area', bold: true })] })] }),
           new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: 'Task Name', bold: true })] })] }),
@@ -620,6 +617,7 @@ class ChecklistService {
       ...data.map(row => new TableRow({
         children: [
           new TableCell({ children: [new Paragraph(row.date.substring(0, 10))] }),
+          new TableCell({ children: [new Paragraph(row.hospital || '')] }),
           new TableCell({ children: [new Paragraph(row.taskId || '')] }),
           new TableCell({ children: [new Paragraph(row.area || '')] }),
           new TableCell({ children: [new Paragraph(row.taskName || '')] }),

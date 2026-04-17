@@ -320,7 +320,7 @@ const Dashboard = () => {
   const handleExport = async () => {
     setIsExporting(true);
     try {
-      await exportCSV(selectedDate, selectedArea || null);
+      await exportCSV(selectedDate, selectedArea || null, effectiveHospitalId);
     } finally {
       setIsExporting(false);
     }
