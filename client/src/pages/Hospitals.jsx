@@ -411,7 +411,7 @@ const Hospitals = () => {
           }
         />
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
           {data.hospitals.map((hospital) => (
             <div 
               key={hospital._id} 
