@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useEffect } from 'react';
 import { format, startOfMonth, endOfMonth, subMonths, subDays } from 'date-fns';
 import { 
   HiOutlineChartBar,
@@ -107,6 +108,13 @@ const Reports = () => {
   const getExportDateLabel = () => {
     return `${format(new Date(dateRange.start + 'T00:00:00'), 'MMM d')} - ${format(new Date(dateRange.end + 'T00:00:00'), 'MMM d, yyyy')}`;
   };
+
+
+  useEffect(() => {
+  if (hospitals && hospitals.length > 0 && !selectedHospital) {
+    setSelectedHospital(hospitals[0]._id);
+  }
+}, [hospitals, selectedHospital]);
 
   return (
     <div className="space-y-6">
@@ -221,7 +229,7 @@ const Reports = () => {
                   setSelectedArea(''); // Reset area when hospital changes
                 }}
                 options={hospitalOptions}
-                placeholder="All Hospitals"
+                placeholder="Select Hospital"
                 className="flex-1"
               />
               <Select

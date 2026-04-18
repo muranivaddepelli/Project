@@ -10,8 +10,8 @@ const seedData = async () => {
     await mongoose.connect(MONGODB_URI);
     console.log('Connected to MongoDB\n');
 
-    const ADMIN_EMAIL = 'admin@clinic.com';
-    const ADMIN_PASSWORD = 'admin123';
+    const ADMIN_EMAIL = 'sugarandheartclinic@banting.com';
+    const ADMIN_PASSWORD = 'Banting@2025';
 
     // Admin user
     let admin = await User.findOne({ email: ADMIN_EMAIL });

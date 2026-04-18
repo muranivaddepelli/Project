@@ -450,7 +450,7 @@ const Dashboard = () => {
                     setSelectedArea(''); // Reset area when hospital changes
                   }}
                   options={hospitalOptions}
-                  placeholder="All Hospitals"
+                  placeholder="Select Hospital"
                   className="w-full sm:w-auto sm:min-w-[160px]"
                 />
               )}

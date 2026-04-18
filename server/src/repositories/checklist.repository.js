@@ -248,7 +248,8 @@ class ChecklistRepository {
       const entry = entryMap.get(task._id.toString());
       return {
         taskId: task.taskId,
-        hospital: formatHospitalLabel(task.area?.hospital),
+        // hospital: formatHospitalLabel(task.area?.hospital),
+        hospital: task.area?.hospital?.name || '',
         area: task.area?.name || '',
         taskName: task.name,
         description: task.description,

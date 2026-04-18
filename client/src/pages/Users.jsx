@@ -226,7 +226,7 @@ const Users = () => {
             value={filterHospital ?? ''}
             onChange={(e) => setFilterHospital(e.target.value || null)}
             options={hospitalOptions}
-            placeholder="All Hospitals"
+            placeholder="Select Hospital"
             className="sm:w-48"
           />
         </div>

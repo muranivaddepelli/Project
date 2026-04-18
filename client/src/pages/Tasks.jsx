@@ -256,7 +256,7 @@ const Tasks = () => {
             value={filterHospital}
             onChange={(e) => setFilterHospital(e.target.value)}
             options={hospitalOptions}
-            placeholder="All Hospitals"
+            placeholder="Select Hospital"
             className="sm:w-48"
           />
           <Select
