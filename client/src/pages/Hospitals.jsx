@@ -419,7 +419,7 @@ const Hospitals = () => {
             >
               {/* Default Badge */}
               {hospital.isDefault && (
-                <div className="absolute top-3 right-3">
+                <div className="absolute bottom-12 right-3">
                   <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
                     <HiOutlineStar className="w-3 h-3" />
                     Default

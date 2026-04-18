@@ -58,6 +58,15 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+
+const path = require('path');
+app.use(express.static(path.join(__dirname, '../../client/build')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../client/build', 'index.html'));
+});
+
+
 // Error handling middleware
 app.use(errorHandler);
 
